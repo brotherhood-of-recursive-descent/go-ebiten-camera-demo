@@ -62,11 +62,12 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 
+	screenBounds := screen.Bounds()
+
 	// lazy initializing the world to render to, as image
 	// creation is very expensive
 	if g.world == nil {
-		bounds := screen.Bounds()
-		g.world = ebiten.NewImage(bounds.Dx(), bounds.Dy())
+		g.world = ebiten.NewImage(screenBounds.Dx(), screenBounds.Dy())
 	}
 
 	// draw the background
@@ -82,7 +83,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 	// draw the world onto screen
 	worldDrawOptions := &ebiten.DrawImageOptions{}
-	worldDrawOptions.GeoM.Translate(g.mouseX, g.mouseY)
+	worldDrawOptions.GeoM.Translate(g.mouseX-float64(screenBounds.Dx())/2, g.mouseY-float64(screenBounds.Dy())/2)
 	screen.DrawImage(g.world, worldDrawOptions)
 }
 
