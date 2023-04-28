@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	camera := camera.New()
+	camera := camera.Camera{}
 	game := game.New(&camera)
 
 	ebiten.SetFullscreen(true)

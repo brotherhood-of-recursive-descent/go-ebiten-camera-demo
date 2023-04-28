@@ -12,11 +12,14 @@ type Game struct {
 
 	posX, posY, scale float64
 	playerSpeed       float64
+
+	world *ebiten.Image
 }
 
 func New(camera *camera.Camera) Game {
 
 	return Game{
+
 		background: assets.LoadBackground(),
 		player:     assets.LoadPlayer(),
 
@@ -52,16 +55,28 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
+
+	// lazy initializing the world to render to, as image
+	// creation is very expensive
+	if g.world == nil {
+		bounds := screen.Bounds()
+		g.world = ebiten.NewImage(bounds.Dx(), bounds.Dy())
+	}
+
 	// draw the background
 	opsB := ebiten.DrawImageOptions{}
 	opsB.GeoM.Scale(3, 3)
-	screen.DrawImage(g.background, &opsB)
+	g.world.DrawImage(g.background, &opsB)
 
 	// draw the player
 	opsP := ebiten.DrawImageOptions{}
 	opsP.GeoM.Scale(g.scale, g.scale)
 	opsP.GeoM.Translate(g.posX, g.posY)
-	screen.DrawImage(g.player, &opsP)
+	g.world.DrawImage(g.player, &opsP)
+
+	// draw the world onto screen
+	worldDrawOptions := &ebiten.DrawImageOptions{}
+	screen.DrawImage(g.world, worldDrawOptions)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {

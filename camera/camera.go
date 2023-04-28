@@ -1,7 +1,7 @@
 package camera
 
-type Camera struct{}
+import "github.com/hajimehoshi/ebiten/v2"
 
-func New() Camera {
-	return Camera{}
+type Camera struct {
+	Surface *ebiten.Image
 }
