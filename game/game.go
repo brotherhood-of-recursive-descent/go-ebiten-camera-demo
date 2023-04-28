@@ -13,6 +13,8 @@ type Game struct {
 	posX, posY, scale float64
 	playerSpeed       float64
 
+	mouseX, mouseY float64
+
 	world *ebiten.Image
 }
 
@@ -45,6 +47,10 @@ func (g *Game) handlePlayerInput() {
 	if ebiten.IsKeyPressed(ebiten.KeyArrowDown) {
 		g.posY += g.playerSpeed
 	}
+
+	// save mouse position
+	x, y := ebiten.CursorPosition()
+	g.mouseX, g.mouseY = float64(x), float64(y)
 }
 
 func (g *Game) Update() error {
@@ -76,6 +82,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 	// draw the world onto screen
 	worldDrawOptions := &ebiten.DrawImageOptions{}
+	worldDrawOptions.GeoM.Translate(g.mouseX, g.mouseY)
 	screen.DrawImage(g.world, worldDrawOptions)
 }
 
