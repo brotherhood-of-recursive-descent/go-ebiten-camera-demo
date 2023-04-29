@@ -15,12 +15,12 @@ var background []byte
 //go:embed player.png
 var player []byte
 
-func LoadBackground() *ebiten.Image {
+func LoadBackgroundSprite() *ebiten.Image {
 	src, _, _ := image.Decode(bytes.NewReader(background))
 	return ebiten.NewImageFromImage(src)
 }
 
-func LoadPlayer() *ebiten.Image {
+func LoadPlayerSprite() *ebiten.Image {
 	src, _, _ := image.Decode(bytes.NewReader(player))
 	return ebiten.NewImageFromImage(src)
 }

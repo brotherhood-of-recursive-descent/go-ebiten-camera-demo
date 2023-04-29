@@ -1,4 +1,4 @@
-package camera
+package goebitencamerademo
 
 import "github.com/hajimehoshi/ebiten/v2"
 
