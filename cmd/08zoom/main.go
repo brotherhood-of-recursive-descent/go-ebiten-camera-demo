@@ -50,10 +50,9 @@ func (g *Game08) Draw(screen *ebiten.Image) {
 	g.background.Draw(g.world.Surface)
 	g.player.Draw(g.world.Surface)
 
-	x := float64(ScreenWidth/2) - g.player.Position.X
-	y := float64(ScreenHeight/2) - g.player.Position.Y
-
-	g.camera.SetPosition(x, y)
+	centerOfScreen := goebitencamerademo.Position{X: float64(ScreenWidth / 2), Y: float64(ScreenHeight / 2)}
+	cpos := centerOfScreen.Subtract(g.player.Position)
+	g.camera.SetPosition(cpos)
 	g.camera.Apply(g.world.Surface, screen)
 
 	g.printDebugInfo(screen)
