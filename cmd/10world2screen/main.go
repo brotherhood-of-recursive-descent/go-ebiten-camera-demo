@@ -11,7 +11,7 @@ import (
 
 const ScreenWidth, ScreenHeight int = 800, 600
 
-type Game09 struct {
+type Game10 struct {
 	player     goebitencamerademo.Player
 	background goebitencamerademo.Background
 	world      goebitencamerademo.World
@@ -20,8 +20,8 @@ type Game09 struct {
 	mousePos goebitencamerademo.Position
 }
 
-func NewGame09() Game09 {
-	return Game09{
+func NewGame10() Game10 {
+	return Game10{
 		world:      goebitencamerademo.NewWorld(ScreenWidth*2, ScreenHeight*2),
 		player:     goebitencamerademo.NewPlayer(100, 100),
 		background: goebitencamerademo.NewBackground(0, 0),
@@ -29,7 +29,7 @@ func NewGame09() Game09 {
 	}
 }
 
-func (g *Game09) Update() error {
+func (g *Game10) Update() error {
 
 	x, y := ebiten.CursorPosition()
 	g.mousePos.X = float64(x)
@@ -42,23 +42,25 @@ func (g *Game09) Update() error {
 		g.camera.ZoomOut()
 	}
 
+	if ebiten.IsMouseButtonPressed(ebiten.MouseButton0) {
+		mouseInWorld := g.camera.GetWorldPosition(g.mousePos)
+		g.camera.SetPosition(mouseInWorld)
+	}
+
 	return g.player.Update()
 }
 
-func (g *Game09) Draw(screen *ebiten.Image) {
+func (g *Game10) Draw(screen *ebiten.Image) {
 
 	g.background.Draw(g.world.Surface)
 	g.player.Draw(g.world.Surface)
 
-	centerOfScreen := goebitencamerademo.Position{X: float64(ScreenWidth / 2), Y: float64(ScreenHeight / 2)}
-	cpos := centerOfScreen.Subtract(g.player.Position)
-	g.camera.Move(cpos)
 	g.camera.Apply(g.world.Surface, screen)
 
 	g.printDebugInfo(screen)
 }
 
-func (g *Game09) printDebugInfo(screen *ebiten.Image) {
+func (g *Game10) printDebugInfo(screen *ebiten.Image) {
 	screenBounds := screen.Bounds()
 	debugStr := fmt.Sprintf("screen: %dx%d\nplayer: %s\nmouse: %s",
 		screenBounds.Max.X, screenBounds.Max.Y,
@@ -68,13 +70,13 @@ func (g *Game09) printDebugInfo(screen *ebiten.Image) {
 	ebitenutil.DebugPrint(screen, debugStr)
 }
 
-func (g *Game09) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
+func (g *Game10) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
 	return outsideWidth, outsideHeight
 }
 
 func main() {
 
-	game := NewGame09()
+	game := NewGame10()
 
 	ebiten.SetFullscreen(false)
 	ebiten.SetWindowSize(ScreenWidth, ScreenHeight)

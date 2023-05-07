@@ -1,42 +1,68 @@
-# go-ebiten-camera-demo
+go-ebiten-camera-demo
+=====================
 
-A detailed explanation on how to implement a 2d camera using the ebitenengine in go
+A detailed explanation on how to implement a 2d camera using the ebitenengine in the Golang language.
 
-The camera should support the following 
-- zoom
-- rotation
-- position
+A basic game
+-------------
 
-## first commit
+Writing games is fun your friends tell you. So one day you sit down and start to write your first couple lines of code that resembles a game. Since Golang is your favourite language you checkout game engines and find ebitenengine.org. You skimmed over the documentation, learn about the Update() #TODO(link) and Draw()#TODO(link) method and end up with the following:
 
-> git checkout d82626f1493cf90f5903179bbc0f9517c204a47b
+> TODO screenshot of a bug 
 
-This explains the a standard [ebitengine](https://ebitengine.org) game. 
+Not bad for a start. In your code you loaded an image, and drew it on the screen specifying the translation using the DrawImageOptions #TODO(link). 
 
-You have your game struct in [game/game.go](game/game.go) satisfying the [ebiten.Game interface](https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Game) and hand it over to the ebitengine in [main.go](main.go). Voilá, you have yourself a game :smile:
+> TODO draw image of coordinate system with the translation explained (no vectors yet!)
 
-![demo animation](docs/demo.gif)
+small refactoring
+-----------------
 
-## A word of translation
+Pumped to have something drawn on the screen, you read more about structuring your code and decide to go down the game-object route. While at it you implement input handling and are pleased with a moving bug. 
 
-Ebitengine uses a left-handed coordinate system. That is that the origin (0,0) is in the upper-left corner. When you place an image on the screen, the image's origin, also the upper-left corner, is placed at the coordinate (0,0).
+> TODO screenshot of a bug on background
 
-To move an image you use the `ebiten.DrawImageOptions{}` GeoM.Translate() method. With passing new x,y coordinates to the method ebitengine moves the origin of the image to the provided coordinate. If you know vector math, this is the equivalent of adding a vector to another one.
-
-> git checkout todo, add image explaining translation
-
-## decoupling the screen from the world
-
-> git checkout ead24633a6828e9e1d2518f48cd9ecf30bf9fbf6
-
-Usually the world, in which your game objects reside is larger than the actual screen's dimensions. Therfore we introduced a world variable of type `*ebiten.Image` that is now the rendering destination of our two game objects (background and player). 
-
-Observe that after drawing the objects into the world, we draw the world into the screen using the `screen.Draw()` method with an no DrawImageOptions specified. 
-
-The result is not very spectacular - we render the same image.
-
-## adding the mouse for fun
-
-> git checkout 50ea7a6312e4260fe42b7ff58c242de9bd01803d
+But you soon realize that the bug moves out of the screen :frowning:. 
 
 
+screen != world
+---------------
+
+ - mouse -> screen
+ - objects -> world
+
+
+enter the camera
+-----------------
+
+- center the player (lots of lines in Draw())
+- introduce the camera
+
+change position
+---------------
+
+ - introduce the concept of position
+ - vector math
+
+zooming
+------
+ - allow zooming 
+
+smoothing
+---------
+ - adds asymptotic math to make the camera following more smooth
+
+rotation
+---------
+- adds rotation to the camera
+
+translate between world and screen
+-----------------------------------
+- utility functions for conversion between the world
+
+
+
+References
+==========
+ * https://ebitengine.org/en/documents/ - useful documentation on how to use the amazing ebitengine library written by Hajime Hoshi.
+ * https://github.com/MelonFunction/ebiten-camera - a generic implementation of a camera based on another implementation. It served as a basis for this implementation.
+ * [Math for Game Programmers: Juicing Your Cameras With Math](https://www.youtube.com/watch?v=tu-Qe66AvtY) - a detailed explanation on how to make the camera feel nice. We used this a reference for the smoothing example.
